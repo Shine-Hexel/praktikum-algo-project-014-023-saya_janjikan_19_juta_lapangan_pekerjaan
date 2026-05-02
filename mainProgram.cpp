@@ -20,13 +20,7 @@ void tampilMenu();
 int main()
 {
 
-    int aa = 0;
-    while (aa < 10)
-    {
-        aa++;
-        if (aa == 10)
-            aa = 0;
-    }
+    
     // tampil task
     char pilih;
     bool running = true;
