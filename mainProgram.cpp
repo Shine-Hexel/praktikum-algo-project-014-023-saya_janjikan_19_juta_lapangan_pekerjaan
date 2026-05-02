@@ -1,4 +1,8 @@
 #include <iostream>
+#include <iomanip>
+#include <cstring>
+#include <stdlib.h>
+#include <stdio.h>
 #include <ctime>
 using namespace std;
 
@@ -7,7 +11,12 @@ struct tugas
     string namaTugas;
     string deskripsi;
     string status;
-    int deadline;
+    int tanggal;
+    int bulan;
+    int tahun;
+    int jam;
+    int menit;
+    
     tugas *next;
     tugas *prev;
 };
