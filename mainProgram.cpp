@@ -1,5 +1,18 @@
 #include <iostream>
 using namespace std;
+
+struct tugas{
+	string namaTugas;
+	string deskripsi;
+	string status;
+	int deadline;
+	tugas* next;
+	tugas* prev;
+};
+
+tugas* head = nullptr;
+tugas* tail = nullptr;
+
 void tampilMenu();
 
 int main(){
@@ -34,7 +47,7 @@ int main(){
 				running = false;
 				break;
 			default:
-				cout << "\n  [!] Pilihan tidak valid.\n";
+				cout << "\nPilihan tidak valid!\nSilahkan pilih antara opsi A-G.\n";
 		}
 	}
 }
