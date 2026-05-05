@@ -152,6 +152,7 @@ void ngambilDataTugas()
     }
     while (!feof(file))
     {
+        /*
         tugas *baru = new tugas;
 
         if (fscanf(file, "%[^;];%[^;];%[^;];%d;%d;%d;%d;%d\n", baru->namaTugas, baru->deskripsi, baru->status, &baru->tanggal, &baru->bulan, &baru->tahun, &baru->jam, &baru->menit) != 8)
@@ -175,6 +176,9 @@ void ngambilDataTugas()
             baru->prev = tail;
             tail = baru;
         }
+            */
+
+        
     }
 
     fclose(file);
@@ -210,12 +214,12 @@ void nambahTugasBaru()
     cin >> baru->menit;
 
     strcpy(baru->status, "In Progress");
+
     baru->next = nullptr;
     baru->prev = nullptr;
 
     if(head == nullptr) {
-        head = baru;
-        tail = baru;
+        head = tail = baru;
     } else {
         tail->next = baru; 
         baru->prev = tail;
