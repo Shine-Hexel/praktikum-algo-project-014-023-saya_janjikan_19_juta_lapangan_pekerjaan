@@ -93,6 +93,8 @@ void tampilMenu()
 
 void manipulasiStatusTugas(tugas* node)
 {
+    /*
+    
     // Implementasi manipulasi status tugas
     if(strcmp(node->status, "Done") == 0) return;
 
@@ -113,6 +115,10 @@ void manipulasiStatusTugas(tugas* node)
     } else {
         strcpy(node->status, "In Progress");
     }
+        */
+
+
+    
 }
 
 
@@ -141,6 +147,7 @@ void ngambilDataTugas()
     if (file == nullptr)
     {
         cout << "Tugas masih kosong" << endl;
+        cout << endl;
         return;
     }
     while (!feof(file))
