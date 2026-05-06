@@ -34,12 +34,15 @@ void lihatTugas();
 void lihatTugasSelesai();
 void nambahTugasBaru();
 void sortingTugasDL();
+void sortingTugasJudul();
+void searchTask();
 
 
 int main()
 {
+    lihatTugas();
+    cout << endl;
 
-    // tampil task
     char pilih;
     bool running = true;
 
@@ -60,16 +63,28 @@ int main()
             // updateStatusTask();
             break;
         case 'D':
-            // searchTask();
+            searchTask();
             break;
         case 'E':
-            // sortTask();
+            char pilihSort;
+            cout << "\nPilih metode sorting:\n";
+            cout << "1. Sorting by Deadline (DL)\n";
+            cout << "2. Sorting by Nama Tugas (A-Z)\n";
+            cout << "Pilihan: ";
+            cin >> pilihSort;
+            if (pilihSort == '1'){
+                sortingTugasDL();
+                cout << "\nTugas berhasil disorting berdasarkan deadline!\n\n";
+            } else if (pilihSort == '2'){
+                sortingTugasJudul();
+                cout << "\nTugas berhasil disorting berdasarkan judul tugas!\n\n";
+            }else cout << "\nPilihan sorting tidak valid!\nSilahkan pilih antara opsi 1 atau 2.\n\n";
             break;
         case 'F':
             lihatTugasSelesai();
             break;
         case 'H':
-            // tandai tugas selesai
+            // tandaiTugasSelesai();
             break;
         case 'G':
             cout << "\n  Selamat fokus menyelesaikan tugas! Data tersimpan secara otomatis >_< \n\n";
@@ -386,5 +401,165 @@ void nambahTugasBaru()
     }
 
     simpanDataTugas();
+}
+
+void sortingTugasDL()
+{
+    if (head == nullptr || head->next == nullptr) return; //jumlah list hanya 1 atau kosong
+
+    tugas *bantu = head;
+
+    while (bantu != nullptr)
+    {
+        tugas *min = bantu;
+        tugas *selanjutnya = bantu->next;
+
+        while (selanjutnya != nullptr)
+        {
+            if ( //membandingkan deadline tugas
+                (selanjutnya->tahun < min->tahun) ||
+                (selanjutnya->tahun == min->tahun && selanjutnya->bulan < min->bulan) ||
+                (selanjutnya->tahun == min->tahun && selanjutnya->bulan == min->bulan && selanjutnya->tanggal < min->tanggal) ||
+                (selanjutnya->tahun == min->tahun && selanjutnya->bulan == min->bulan && selanjutnya->tanggal == min->tanggal && selanjutnya->jam < min->jam) ||
+                (selanjutnya->tahun == min->tahun && selanjutnya->bulan == min->bulan && selanjutnya->tanggal == min->tanggal && selanjutnya->jam == min->jam && selanjutnya->menit < min->menit)
+            )
+            {
+                min = selanjutnya;
+            }
+            selanjutnya = selanjutnya->next;
+        }
+
+        if (min != bantu)
+        {
+            // swap isi data tugas menggunakan variabel sementara
+            char tempNama[100], tempDeskripsi[200], tempStatus[50];
+            int tempTanggal, tempBulan, tempTahun, tempJam, tempMenit;
+
+            strcpy(tempNama, bantu->namaTugas);
+            strcpy(tempDeskripsi, bantu->deskripsi);
+            strcpy(tempStatus, bantu->status);
+            tempTanggal = bantu->tanggal;
+            tempBulan = bantu->bulan;
+            tempTahun = bantu->tahun;
+            tempJam = bantu->jam;
+            tempMenit = bantu->menit;
+
+            strcpy(bantu->namaTugas, min->namaTugas);
+            strcpy(bantu->deskripsi, min->deskripsi);
+            strcpy(bantu->status, min->status);
+            bantu->tanggal = min->tanggal;
+            bantu->bulan = min->bulan;
+            bantu->tahun = min->tahun;
+            bantu->jam = min->jam;
+            bantu->menit = min->menit;
+
+            strcpy(min->namaTugas, tempNama);
+            strcpy(min->deskripsi, tempDeskripsi);
+            strcpy(min->status, tempStatus);
+            min->tanggal = tempTanggal;
+            min->bulan = tempBulan;
+            min->tahun = tempTahun;
+            min->jam = tempJam;
+            min->menit = tempMenit;
+        }
+
+        bantu = bantu->next;
+    }
+
+    simpanDataTugas();
+}
+
+//sorting by judul tugas secara alfabetis menggunakan bubble sort
+void sortingTugasJudul()
+{
+    if (head == nullptr || head->next == nullptr) return; //jumlah list hanya 1 atau kosong
+
+    bool swapped;
+    tugas *bantu;
+    tugas *akhir = nullptr;
+
+    do
+    {
+        swapped = false;
+        bantu = head;
+
+        while (bantu->next != akhir)
+        {
+            if (strcmp(bantu->namaTugas, bantu->next->namaTugas) > 0)
+            {
+                // swap isi data tugas menggunakan variabel sementara
+                char tempNama[100], tempDeskripsi[200], tempStatus[50];
+                int tempTanggal, tempBulan, tempTahun, tempJam, tempMenit;
+
+                strcpy(tempNama, bantu->namaTugas);
+                strcpy(tempDeskripsi, bantu->deskripsi);
+                strcpy(tempStatus, bantu->status);
+                tempTanggal = bantu->tanggal;
+                tempBulan = bantu->bulan;
+                tempTahun = bantu->tahun;
+                tempJam = bantu->jam;
+                tempMenit = bantu->menit;
+
+                strcpy(bantu->namaTugas, bantu->next->namaTugas);
+                strcpy(bantu->deskripsi, bantu->next->deskripsi);
+                strcpy(bantu->status, bantu->next->status);
+                bantu->tanggal = bantu->next->tanggal;
+                bantu->bulan = bantu->next->bulan;
+                bantu->tahun = bantu->next->tahun;
+                bantu->jam = bantu->next->jam;
+                bantu->menit = bantu->next->menit;
+
+                strcpy(bantu->next->namaTugas, tempNama);
+                strcpy(bantu->next->deskripsi, tempDeskripsi);
+                strcpy(bantu->next->status, tempStatus);
+                bantu->next->tanggal = tempTanggal;
+                bantu->next->bulan = tempBulan;
+                bantu->next->tahun = tempTahun;
+                bantu->next->jam = tempJam;
+                bantu->next->menit = tempMenit;
+
+                swapped = true;
+            }
+            bantu = bantu->next;
+        }
+        akhir = bantu; //make sure elemen terakhir sudah pada tempatnya
+    } while (swapped);
+
+    simpanDataTugas();
+}
+
+void searchTask()
+{
+    char keyword[100];
+    cout << "[PASTIKAN PENULISAN NAMA TUGAS SAMA DENGAN PENULISAN PADA SAAT INPUT]\n";
+    cout << "Masukkan nama tugas yang ingin dicari: ";
+    cin.ignore();
+    cin.getline(keyword, 100);
+
+    tugas *bantu = head;
+    bool found = false;
+
+    cout << "\nHasil pencarian untuk \"" << keyword << "\":\n";
+    cout << "========================================\n";
+
+    while (bantu != nullptr)
+    {
+        if (strstr(bantu->namaTugas, keyword) != nullptr)
+        {
+            cout << "Nama Tugas : " << bantu->namaTugas << endl;
+            cout << "Deskripsi  : " << bantu->deskripsi << endl;
+            cout << "Status     : " << bantu->status << endl;
+            cout << "Deadline   : " << bantu->tanggal << "/" << bantu->bulan << "/" << bantu->tahun
+                 << " " << bantu->jam << ":" << bantu->menit << endl;
+            cout << "----------------------------------------\n";
+            found = true;
+        }
+        bantu = bantu->next;
+    }
+
+    if (!found)
+    {
+        cout << "Tugas \"" << keyword << "\" tidak ditemukan.\n";
+    }
 }
 
