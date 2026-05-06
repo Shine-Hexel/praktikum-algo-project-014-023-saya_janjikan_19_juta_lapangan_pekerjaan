@@ -93,11 +93,10 @@ void tampilMenu()
 
 void manipulasiStatusTugas(tugas* node)
 {
-    
     // Implementasi manipulasi status tugas
     if(strcmp(node->status, "Done") == 0) return;
 
-    time_t now = time(0);
+    time_t saat_ini = time(0);
 
     tm deadline = {};
     deadline.tm_year = node->tahun - 1900; // tm_year dihitung sejak 1900
@@ -109,14 +108,11 @@ void manipulasiStatusTugas(tugas* node)
 
     time_t waktuDeadline = mktime(&deadline);
 
-    if(waktuDeadline < now) {
+    if(waktuDeadline < saat_ini) {
         strcpy(node->status, "Late");
     } else {
         strcpy(node->status, "In Progress");
     }
-    
-
-
     
 }
 
@@ -131,7 +127,16 @@ void simpanDataTugas()
 
     while (bantu != nullptr)
     {
-        fprintf(file, "%s;%s;%s;%d;%d;%d;%d;%d\n", bantu->namaTugas, bantu->deskripsi, bantu->status, bantu->tanggal, bantu->bulan, bantu->tahun, bantu->jam, bantu->menit);
+        fprintf(file, "%s;%s;%s;%d;%d;%d;%d;%d\n", 
+            bantu->namaTugas, 
+            bantu->deskripsi, 
+            bantu->status, 
+            bantu->tanggal, 
+            bantu->bulan, 
+            bantu->tahun, 
+            bantu->jam, 
+            bantu->menit);
+
         bantu = bantu->next;
     }
     fclose(file);
@@ -149,15 +154,21 @@ void ngambilDataTugas()
         cout << endl;
         return;
     }
-    while (!feof(file))
+
+    tugas *bantu = head;
+    while (bantu != nullptr)
     {
         tugas *baru = new tugas;
 
-        if (fscanf(file, "%[^;];%[^;];%[^;];%d;%d;%d;%d;%d\n", baru->namaTugas, baru->deskripsi, baru->status, &baru->tanggal, &baru->bulan, &baru->tahun, &baru->jam, &baru->menit) != 8)
-        {
-            delete baru;
-            break; // Jika format tidak sesuai, keluar dari loop
-        }
+        fscanf(file, "%[^;];%[^;];%[^;];%d;%d;%d;%d;%d\n", 
+            baru->namaTugas, 
+            baru->deskripsi, 
+            baru->status, 
+            &baru->tanggal, 
+            &baru->bulan, 
+            &baru->tahun, 
+            &baru->jam, 
+            &baru->menit)
 
         baru->next = nullptr;
         baru->prev = nullptr;
@@ -167,15 +178,15 @@ void ngambilDataTugas()
         manipulasiStatusTugas(baru);
 
         if(head == nullptr) {
-            head = baru;
-            tail = baru;
+            head = tail = baru;
         } else {
             tail->next = baru; 
             baru->prev = tail;
             tail = baru;
         }
 
-        
+        bantu = bantu->next;
+
     }
 
     fclose(file);
