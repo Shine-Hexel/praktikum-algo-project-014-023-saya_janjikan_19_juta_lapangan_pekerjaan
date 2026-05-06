@@ -71,6 +71,9 @@ int main()
     }
 }
 
+
+
+
 void tampilMenu()
 {
     cout << "========================================\n";
@@ -87,6 +90,9 @@ void tampilMenu()
     cout << "========================================\n";
     cout << "  Pilihan: ";
 }
+
+
+
 
 void pindahTugasSelesai(tugas *node)
 {
@@ -138,6 +144,10 @@ void pindahTugasSelesai(tugas *node)
     fclose(file);
 }
 
+
+
+
+
 void lihatTugasSelesai()
 {
 
@@ -149,6 +159,10 @@ void lihatTugasSelesai()
         return;
     }
 }
+
+
+
+
 
 void cekStatusTerkini(tugas *node)
 {
@@ -181,6 +195,10 @@ void cekStatusTerkini(tugas *node)
     }
 }
 
+
+
+
+
 void simpanDataTugas()
 {
     // buat nyimpen data tugas ke file
@@ -203,6 +221,10 @@ void simpanDataTugas()
     }
     fclose(file);
 }
+
+
+
+
 
 void ngambilDataTugas()
 {
@@ -259,8 +281,12 @@ void ngambilDataTugas()
     }
 
     fclose(file);
-    free(bantu);
 }
+
+
+
+
+
 
 void lihatTugas()
 {
@@ -276,9 +302,57 @@ void lihatTugas()
 
     while (bantu != nullptr)
     {
-    
+
     }
 }
+
+
+
+
+void lihatTugasSelesai()
+{
+
+    FILE *file = fopen("data_tugas_done.txt", "r");
+    if (file == nullptr)
+    {
+        cout << "Tugas masih kosong" << endl;
+        cout << endl;
+        return;
+    }
+
+    cout << "========================================\n";
+    cout << "|            TUGAS SELESAI             |\n";
+    cout << "========================================\n";
+
+    char namaTugas[100];
+    char deskripsi[200];
+    char status[50];
+    int tanggal, bulan, tahun, jam, menit;
+
+    while (fscanf(file, "%[^;];%[^;];%[^;];%d;%d;%d;%d;%d\n",
+                  namaTugas,
+                  deskripsi,
+                  status,
+                  &tanggal,
+                  &bulan,
+                  &tahun,
+                  &jam,
+                  &menit) != EOF)
+    {
+        cout << "Nama Tugas: " << namaTugas << endl;
+        cout << "Deskripsi: " << deskripsi << endl;
+        cout << "Status: " << status << endl;
+        cout << "Deadline: " << tanggal << "/" << bulan << "/" << tahun
+             << " " << jam << ":" << menit << endl;
+        cout << "----------------------------------------\n";
+    }
+
+    fclose(file);
+}
+
+
+
+
 
 void nambahTugasBaru()
 {
