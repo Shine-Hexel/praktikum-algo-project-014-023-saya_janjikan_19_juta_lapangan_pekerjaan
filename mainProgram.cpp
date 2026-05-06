@@ -88,19 +88,85 @@ void tampilMenu()
     cout << "  Pilihan: ";
 }
 
-
-
-
-void manipulasiStatusTugas(tugas* node)
+void pindahTugasSelesai(tugas *node)
 {
-    // Implementasi manipulasi status tugas
-    if(strcmp(node->status, "Done") == 0) return;
+
+    FILE *file = fopen("data_tugas_done.txt", "a");
+    tugas *bantu = node;
+    fprintf(file, "%s;%s;%s;%d;%d;%d;%d;%d\n",
+            bantu->namaTugas,
+            bantu->deskripsi,
+            bantu->status,
+            bantu->tanggal,
+            bantu->bulan,
+            bantu->tahun,
+            bantu->jam,
+            bantu->menit);
+
+    // jika tugas yang selesai adalah tugas paling atas
+    if (bantu == head)
+    {
+
+        head = bantu->next;
+        if (head != nullptr)
+        {
+            head->prev = nullptr;
+        }
+    }
+
+    // jika tugas yang selesai adalah tugas paling bawah
+    else if (bantu == tail)
+    {
+        tail = bantu->prev;
+        if (tail != nullptr)
+        {
+            tail->next = nullptr;
+        }
+    }
+
+    // jika tugas yang selesai berada di tengah list
+    else
+    {
+        bantu->prev->next = bantu->next;
+        bantu->next->prev = bantu->prev;
+        bantu->next = nullptr;
+        bantu->prev = nullptr;
+    }
+
+    // node bantu dihapus karena sudah tidak perlu lagi
+    free(bantu);
+    fclose(file);
+}
+
+
+void lihatTugasSelesai(){
+
+    FILE *file = fopen("data_tugas_done.txt", "r");
+    if (file == nullptr)
+    {
+        cout << "Tugas masih kosong" << endl;
+        cout << endl;
+        return;
+    }
+
+}
+
+
+
+void cekStatusTerkini(tugas *node)
+{
+    // Implementasi pengecekan status tugas
+    if (strcmp(node->status, "Done") == 0)
+    {
+        pindahTugasSelesai(node);
+        return;
+    }
 
     time_t saat_ini = time(0);
 
     tm deadline = {};
     deadline.tm_year = node->tahun - 1900; // tm_year dihitung sejak 1900
-    deadline.tm_mon = node->bulan - 1; // tm_mon dihitung dari
+    deadline.tm_mon = node->bulan - 1;     // tm_mon dihitung dari 0 (Januari)
     deadline.tm_mday = node->tanggal;
     deadline.tm_hour = node->jam;
     deadline.tm_min = node->menit;
@@ -108,16 +174,15 @@ void manipulasiStatusTugas(tugas* node)
 
     time_t waktuDeadline = mktime(&deadline);
 
-    if(waktuDeadline < saat_ini) {
+    if (waktuDeadline < saat_ini)
+    {
         strcpy(node->status, "Late");
-    } else {
+    }
+    else
+    {
         strcpy(node->status, "In Progress");
     }
-    
 }
-
-
-
 
 void simpanDataTugas()
 {
@@ -127,22 +192,20 @@ void simpanDataTugas()
 
     while (bantu != nullptr)
     {
-        fprintf(file, "%s;%s;%s;%d;%d;%d;%d;%d\n", 
-            bantu->namaTugas, 
-            bantu->deskripsi, 
-            bantu->status, 
-            bantu->tanggal, 
-            bantu->bulan, 
-            bantu->tahun, 
-            bantu->jam, 
-            bantu->menit);
+        fprintf(file, "%s;%s;%s;%d;%d;%d;%d;%d\n",
+                bantu->namaTugas,
+                bantu->deskripsi,
+                bantu->status,
+                bantu->tanggal,
+                bantu->bulan,
+                bantu->tahun,
+                bantu->jam,
+                bantu->menit);
 
         bantu = bantu->next;
     }
     fclose(file);
 }
-
-
 
 void ngambilDataTugas()
 {
@@ -155,44 +218,52 @@ void ngambilDataTugas()
         return;
     }
 
-    tugas *bantu = head;
-    while (bantu != nullptr)
+    tugas *bantu = new tugas;
+
+    while (fscanf(file, "%[^;];%[^;];%[^;];%d;%d;%d;%d;%d\n",
+                  bantu->namaTugas,
+                  bantu->deskripsi,
+                  bantu->status,
+                  &bantu->tanggal,
+                  &bantu->bulan,
+                  &bantu->tahun,
+                  &bantu->jam,
+                  &bantu->menit) != EOF)
     {
         tugas *baru = new tugas;
 
-        fscanf(file, "%[^;];%[^;];%[^;];%d;%d;%d;%d;%d\n", 
-            baru->namaTugas, 
-            baru->deskripsi, 
-            baru->status, 
-            &baru->tanggal, 
-            &baru->bulan, 
-            &baru->tahun, 
-            &baru->jam, 
-            &baru->menit)
+        // masukin data dari node bantu ke node tugas
+        strcpy(baru->namaTugas, bantu->namaTugas);
+        strcpy(baru->deskripsi, bantu->deskripsi);
+        strcpy(baru->status, bantu->status);
+        baru->tanggal = bantu->tanggal;
+        baru->bulan = bantu->bulan;
+        baru->tahun = bantu->tahun;
+        baru->jam = bantu->jam;
+        baru->menit = bantu->menit;
 
         baru->next = nullptr;
         baru->prev = nullptr;
 
-        //status tugas diupdate sesuai dengan waktu sekarang
-        //kalo udah lewat deadline, statusnya jadi "Late", kalo belum lewat, statusnya "In Progress"
-        manipulasiStatusTugas(baru);
+        // status tugas diupdate sesuai dengan waktu sekarang
+        // kalo udah lewat deadline, statusnya jadi "Late", kalo belum lewat, statusnya "In Progress"
+        cekStatusTerkini(baru);
 
-        if(head == nullptr) {
+        if (head == nullptr)
+        {
             head = tail = baru;
-        } else {
-            tail->next = baru; 
+        }
+        else
+        {
+            tail->next = baru;
             baru->prev = tail;
             tail = baru;
         }
-
-        bantu = bantu->next;
-
     }
 
     fclose(file);
+    free(bantu);
 }
-
-
 
 void nambahTugasBaru()
 {
@@ -226,10 +297,13 @@ void nambahTugasBaru()
     baru->next = nullptr;
     baru->prev = nullptr;
 
-    if(head == nullptr) {
+    if (head == nullptr)
+    {
         head = tail = baru;
-    } else {
-        tail->next = baru; 
+    }
+    else
+    {
+        tail->next = baru;
         baru->prev = tail;
         tail = baru;
     }
