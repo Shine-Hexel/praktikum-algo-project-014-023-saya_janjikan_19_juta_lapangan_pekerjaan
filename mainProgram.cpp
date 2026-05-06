@@ -71,9 +71,6 @@ int main()
     }
 }
 
-
-
-
 void tampilMenu()
 {
     cout << "========================================\n";
@@ -90,9 +87,6 @@ void tampilMenu()
     cout << "========================================\n";
     cout << "  Pilihan: ";
 }
-
-
-
 
 void pindahTugasSelesai(tugas *node)
 {
@@ -144,10 +138,6 @@ void pindahTugasSelesai(tugas *node)
     fclose(file);
 }
 
-
-
-
-
 void lihatTugasSelesai()
 {
 
@@ -160,11 +150,7 @@ void lihatTugasSelesai()
     }
 }
 
-
-
-
-
-void cekStatusTerkini(tugas *node)
+void aturStatusTerkini(tugas *node)
 {
     // Implementasi pengecekan status tugas
     if (strcmp(node->status, "Done") == 0)
@@ -195,14 +181,10 @@ void cekStatusTerkini(tugas *node)
     }
 }
 
-
-
-
-
 void simpanDataTugas()
 {
     // buat nyimpen data tugas ke file
-    FILE *file = fopen("data_tugas.txt", "a");
+    FILE *file = fopen("data_tugas.txt", "w");
     tugas *bantu = head;
 
     while (bantu != nullptr)
@@ -221,10 +203,6 @@ void simpanDataTugas()
     }
     fclose(file);
 }
-
-
-
-
 
 void ngambilDataTugas()
 {
@@ -266,12 +244,15 @@ void ngambilDataTugas()
 
         // status tugas diupdate sesuai dengan waktu sekarang
         // kalo udah lewat deadline, statusnya jadi "Late", kalo belum lewat, statusnya "In Progress"
-        cekStatusTerkini(baru);
+        aturStatusTerkini(baru);
 
+        // jika list masih kosong, node baru jadi head dan tail
         if (head == nullptr)
         {
             head = tail = baru;
         }
+
+        // kalo list udah ada isinya, node baru ditambahin di akhir list
         else
         {
             tail->next = baru;
@@ -282,11 +263,6 @@ void ngambilDataTugas()
 
     fclose(file);
 }
-
-
-
-
-
 
 void lihatTugas()
 {
@@ -302,12 +278,16 @@ void lihatTugas()
 
     while (bantu != nullptr)
     {
-
+        cout << "Nama Tugas : " << bantu->namaTugas << endl;
+        cout << "Deskripsi  : " << bantu->deskripsi << endl;
+        cout << "Status     : " << bantu->status << endl;
+        cout << "Deadline   : " << bantu->tanggal << "/" << bantu->bulan << "/" << bantu->tahun
+             << " " << bantu->jam << ":" << bantu->menit << endl;
+        cout << "----------------------------------------\n";
+        cout << endl;
+        bantu = bantu->next;
     }
 }
-
-
-
 
 void lihatTugasSelesai()
 {
@@ -320,6 +300,7 @@ void lihatTugasSelesai()
         return;
     }
 
+    cout << endl;
     cout << "========================================\n";
     cout << "|            TUGAS SELESAI             |\n";
     cout << "========================================\n";
@@ -339,20 +320,17 @@ void lihatTugasSelesai()
                   &jam,
                   &menit) != EOF)
     {
-        cout << "Nama Tugas: " << namaTugas << endl;
-        cout << "Deskripsi: " << deskripsi << endl;
-        cout << "Status: " << status << endl;
-        cout << "Deadline: " << tanggal << "/" << bulan << "/" << tahun
+        cout << "Nama Tugas : " << namaTugas << endl;
+        cout << "Deskripsi  : " << deskripsi << endl;
+        cout << "Status     : " << status << endl;
+        cout << "Deadline   : " << tanggal << "/" << bulan << "/" << tahun
              << " " << jam << ":" << menit << endl;
         cout << "----------------------------------------\n";
+        cout << endl;
     }
 
     fclose(file);
 }
-
-
-
-
 
 void nambahTugasBaru()
 {
