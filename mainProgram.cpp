@@ -37,7 +37,6 @@ void sortingTugasDL();
 void sortingTugasJudul();
 void searchTask();
 
-
 int main()
 {
     lihatTugas();
@@ -72,13 +71,18 @@ int main()
             cout << "2. Sorting by Nama Tugas (A-Z)\n";
             cout << "Pilihan: ";
             cin >> pilihSort;
-            if (pilihSort == '1'){
+            if (pilihSort == '1')
+            {
                 sortingTugasDL();
                 cout << "\nTugas berhasil disorting berdasarkan deadline!\n\n";
-            } else if (pilihSort == '2'){
+            }
+            else if (pilihSort == '2')
+            {
                 sortingTugasJudul();
                 cout << "\nTugas berhasil disorting berdasarkan judul tugas!\n\n";
-            }else cout << "\nPilihan sorting tidak valid!\nSilahkan pilih antara opsi 1 atau 2.\n\n";
+            }
+            else
+                cout << "\nPilihan sorting tidak valid!\nSilahkan pilih antara opsi 1 atau 2.\n\n";
             break;
         case 'F':
             lihatTugasSelesai();
@@ -115,24 +119,22 @@ void tampilMenu()
 
 void pindahTugasSelesai(tugas *node)
 {
-
     FILE *file = fopen("data_tugas_done.txt", "a");
-    tugas *bantu = node;
+
     fprintf(file, "%s;%s;%s;%d;%d;%d;%d;%d\n",
-            bantu->namaTugas,
-            bantu->deskripsi,
-            bantu->status,
-            bantu->tanggal,
-            bantu->bulan,
-            bantu->tahun,
-            bantu->jam,
-            bantu->menit);
+            node->namaTugas,
+            node->deskripsi,
+            node->status,
+            node->tanggal,
+            node->bulan,
+            node->tahun,
+            node->jam,
+            node->menit);
 
     // jika tugas yang selesai adalah tugas paling atas
-    if (bantu == head)
+    if (node == head)
     {
-
-        head = bantu->next;
+        head = node->next;
         if (head != nullptr)
         {
             head->prev = nullptr;
@@ -140,9 +142,9 @@ void pindahTugasSelesai(tugas *node)
     }
 
     // jika tugas yang selesai adalah tugas paling bawah
-    else if (bantu == tail)
+    else if (node == tail)
     {
-        tail = bantu->prev;
+        tail = node->prev;
         if (tail != nullptr)
         {
             tail->next = nullptr;
@@ -152,27 +154,15 @@ void pindahTugasSelesai(tugas *node)
     // jika tugas yang selesai berada di tengah list
     else
     {
-        bantu->prev->next = bantu->next;
-        bantu->next->prev = bantu->prev;
-        bantu->next = nullptr;
-        bantu->prev = nullptr;
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        node->next = nullptr;
+        node->prev = nullptr;
     }
 
     // node bantu dihapus karena sudah tidak perlu lagi
-    free(bantu);
+    free(node);
     fclose(file);
-}
-
-void lihatTugasSelesai()
-{
-
-    FILE *file = fopen("data_tugas_done.txt", "r");
-    if (file == nullptr)
-    {
-        cout << "Tugas masih kosong" << endl;
-        cout << endl;
-        return;
-    }
 }
 
 void aturStatusTerkini(tugas *node)
@@ -185,8 +175,8 @@ void aturStatusTerkini(tugas *node)
     }
 
     time_t saat_ini = time(0);
-
     tm deadline = {};
+
     deadline.tm_year = node->tahun - 1900; // tm_year dihitung sejak 1900
     deadline.tm_mon = node->bulan - 1;     // tm_mon dihitung dari 0 (Januari)
     deadline.tm_mday = node->tanggal;
@@ -384,8 +374,8 @@ void nambahTugasBaru()
     cout << "Masukkan menit deadline (0-59): ";
     cin >> baru->menit;
 
-    strcpy(baru->status, "In Progress");
-
+    aturStatusTerkini(baru);
+    
     baru->next = nullptr;
     baru->prev = nullptr;
 
@@ -405,7 +395,8 @@ void nambahTugasBaru()
 
 void sortingTugasDL()
 {
-    if (head == nullptr || head->next == nullptr) return; //jumlah list hanya 1 atau kosong
+    if (head == nullptr || head->next == nullptr)
+        return; // jumlah list hanya 1 atau kosong
 
     tugas *bantu = head;
 
@@ -416,13 +407,12 @@ void sortingTugasDL()
 
         while (selanjutnya != nullptr)
         {
-            if ( //membandingkan deadline tugas
+            if ( // membandingkan deadline tugas
                 (selanjutnya->tahun < min->tahun) ||
                 (selanjutnya->tahun == min->tahun && selanjutnya->bulan < min->bulan) ||
                 (selanjutnya->tahun == min->tahun && selanjutnya->bulan == min->bulan && selanjutnya->tanggal < min->tanggal) ||
                 (selanjutnya->tahun == min->tahun && selanjutnya->bulan == min->bulan && selanjutnya->tanggal == min->tanggal && selanjutnya->jam < min->jam) ||
-                (selanjutnya->tahun == min->tahun && selanjutnya->bulan == min->bulan && selanjutnya->tanggal == min->tanggal && selanjutnya->jam == min->jam && selanjutnya->menit < min->menit)
-            )
+                (selanjutnya->tahun == min->tahun && selanjutnya->bulan == min->bulan && selanjutnya->tanggal == min->tanggal && selanjutnya->jam == min->jam && selanjutnya->menit < min->menit))
             {
                 min = selanjutnya;
             }
@@ -469,10 +459,11 @@ void sortingTugasDL()
     simpanDataTugas();
 }
 
-//sorting by judul tugas secara alfabetis menggunakan bubble sort
+// sorting by judul tugas secara alfabetis menggunakan bubble sort
 void sortingTugasJudul()
 {
-    if (head == nullptr || head->next == nullptr) return; //jumlah list hanya 1 atau kosong
+    if (head == nullptr || head->next == nullptr)
+        return; // jumlah list hanya 1 atau kosong
 
     bool swapped;
     tugas *bantu;
@@ -522,7 +513,7 @@ void sortingTugasJudul()
             }
             bantu = bantu->next;
         }
-        akhir = bantu; //make sure elemen terakhir sudah pada tempatnya
+        akhir = bantu; // make sure elemen terakhir sudah pada tempatnya
     } while (swapped);
 
     simpanDataTugas();
@@ -562,4 +553,3 @@ void searchTask()
         cout << "Tugas \"" << keyword << "\" tidak ditemukan.\n";
     }
 }
-
