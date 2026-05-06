@@ -25,6 +25,16 @@ tugas *head = nullptr;
 tugas *tail = nullptr;
 
 void tampilMenu();
+void pindahTugasSelesai(tugas *node);
+void lihatTugasSelesai();
+void aturStatusTerkini(tugas *node);
+void simpanDataTugas();
+void ngambilDataTugas();
+void lihatTugas();
+void lihatTugasSelesai();
+void nambahTugasBaru();
+void sortingTugasDL();
+
 
 int main()
 {
@@ -41,13 +51,13 @@ int main()
         switch (toupper(pilih))
         {
         case 'A':
-            // addTask();
+            nambahTugasBaru();
             break;
         case 'B':
             // deleteTask();
             break;
         case 'C':
-            // updateTask();
+            // updateStatusTask();
             break;
         case 'D':
             // searchTask();
@@ -56,7 +66,7 @@ int main()
             // sortTask();
             break;
         case 'F':
-            // doneTable();
+            lihatTugasSelesai();
             break;
         case 'H':
             // tandai tugas selesai
@@ -377,3 +387,4 @@ void nambahTugasBaru()
 
     simpanDataTugas();
 }
+
