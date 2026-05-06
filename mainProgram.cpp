@@ -93,7 +93,6 @@ void tampilMenu()
 
 void manipulasiStatusTugas(tugas* node)
 {
-    /*
     
     // Implementasi manipulasi status tugas
     if(strcmp(node->status, "Done") == 0) return;
@@ -115,7 +114,7 @@ void manipulasiStatusTugas(tugas* node)
     } else {
         strcpy(node->status, "In Progress");
     }
-        */
+    
 
 
     
@@ -152,7 +151,6 @@ void ngambilDataTugas()
     }
     while (!feof(file))
     {
-        /*
         tugas *baru = new tugas;
 
         if (fscanf(file, "%[^;];%[^;];%[^;];%d;%d;%d;%d;%d\n", baru->namaTugas, baru->deskripsi, baru->status, &baru->tanggal, &baru->bulan, &baru->tahun, &baru->jam, &baru->menit) != 8)
@@ -176,7 +174,6 @@ void ngambilDataTugas()
             baru->prev = tail;
             tail = baru;
         }
-            */
 
         
     }
