@@ -138,8 +138,8 @@ void pindahTugasSelesai(tugas *node)
     fclose(file);
 }
 
-
-void lihatTugasSelesai(){
+void lihatTugasSelesai()
+{
 
     FILE *file = fopen("data_tugas_done.txt", "r");
     if (file == nullptr)
@@ -148,10 +148,7 @@ void lihatTugasSelesai(){
         cout << endl;
         return;
     }
-
 }
-
-
 
 void cekStatusTerkini(tugas *node)
 {
@@ -187,7 +184,7 @@ void cekStatusTerkini(tugas *node)
 void simpanDataTugas()
 {
     // buat nyimpen data tugas ke file
-    FILE *file = fopen("data_tugas.txt", "w");
+    FILE *file = fopen("data_tugas.txt", "a");
     tugas *bantu = head;
 
     while (bantu != nullptr)
@@ -263,6 +260,24 @@ void ngambilDataTugas()
 
     fclose(file);
     free(bantu);
+}
+
+void lihatTugas()
+{
+
+    ngambilDataTugas();
+    int angka = 0;
+
+    tugas *bantu = new tugas;
+    bantu = head;
+    cout << "========================================\n";
+    cout << "|              TUGAS SAYA              |\n";
+    cout << "========================================\n";
+
+    while (bantu != nullptr)
+    {
+    
+    }
 }
 
 void nambahTugasBaru()
