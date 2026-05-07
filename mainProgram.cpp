@@ -189,7 +189,8 @@ void tandaiTugasSelesai()
 
     if (!found)
     {
-        cout << "\nTugas \"" << namaTugas << "\" tidak ditemukan.\n\n";
+        cout << endl;
+        cout << "Tugas \"" << namaTugas << "\" tidak ditemukan." << endl << endl;
     }
 }
 
