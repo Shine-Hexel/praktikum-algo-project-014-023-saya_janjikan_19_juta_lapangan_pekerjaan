@@ -167,14 +167,8 @@ void pindahTugasSelesai(tugas *node)
 
 void aturStatusTerkini(tugas *node)
 {
-    // Implementasi pengecekan status tugas
-    if (strcmp(node->status, "Done") == 0)
-    {
-        pindahTugasSelesai(node);
-        return;
-    }
-
     time_t saat_ini = time(0);
+
     tm deadline = {};
 
     deadline.tm_year = node->tahun - 1900; // tm_year dihitung sejak 1900
@@ -182,7 +176,7 @@ void aturStatusTerkini(tugas *node)
     deadline.tm_mday = node->tanggal;
     deadline.tm_hour = node->jam;
     deadline.tm_min = node->menit;
-    deadline.tm_sec = 0;
+    //deadline.tm_sec = 0;
 
     time_t waktuDeadline = mktime(&deadline);
 
