@@ -88,7 +88,7 @@ int main()
             lihatTugasSelesai();
             break;
         case 'H':
-            // tandaiTugasSelesai();
+            tandaiTugasSelesai();
             break;
         case 'G':
             cout << "\n  Selamat fokus menyelesaikan tugas! Data tersimpan secara otomatis >_< \n\n";
@@ -164,6 +164,35 @@ void pindahTugasSelesai(tugas *node)
     free(node);
     fclose(file);
 }
+
+void tandaiTugasSelesai()
+{
+    char namaTugas[100];
+    cout << "Masukkan nama tugas yang ingin ditandai selesai: ";
+    cin.ignore();
+    cin.getline(namaTugas, 100);
+
+    tugas *bantu = head;
+    bool found = false;
+
+    while (bantu != nullptr)
+    {
+        if (strcmp(bantu->namaTugas, namaTugas) == 0)
+        {
+            pindahTugasSelesai(bantu);
+            cout << "\nTugas \"" << namaTugas << "\" berhasil ditandai selesai!\n\n";
+            found = true;
+            break;
+        }
+        bantu = bantu->next;
+    }
+
+    if (!found)
+    {
+        cout << "\nTugas \"" << namaTugas << "\" tidak ditemukan.\n\n";
+    }
+}
+
 
 void aturStatusTerkini(tugas *node)
 {
