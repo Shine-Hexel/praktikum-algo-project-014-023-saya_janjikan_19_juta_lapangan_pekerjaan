@@ -38,6 +38,7 @@ void sortingTugasDL();
 void sortingTugasJudul();
 void searchTask();
 void hapusTask();
+void bersihkanList();
 
 int main()
 {
@@ -125,6 +126,12 @@ void pindahTugasSelesai(tugas *node)
 {
     FILE *file = fopen("data_tugas_done.txt", "a");
 
+    if (file == nullptr)
+    {
+        cout << "File gagal dibuka!\n";
+        return;
+    }
+
     fprintf(file, "%s;%s;%s;%d;%d;%d;%d;%d\n",
             node->namaTugas,
             node->deskripsi,
@@ -165,7 +172,7 @@ void pindahTugasSelesai(tugas *node)
     }
 
     // node bantu dihapus karena sudah tidak perlu lagi
-    free(node);
+    delete node;
     fclose(file);
 }
 
@@ -183,6 +190,7 @@ void tandaiTugasSelesai()
     {
         if (strcmp(bantu->namaTugas, namaTugas) == 0)
         {
+            strcpy(bantu->status, "Done");
             pindahTugasSelesai(bantu);
             cout << "\nTugas \"" << namaTugas << "\" berhasil ditandai selesai!\n\n";
             found = true;
@@ -262,8 +270,10 @@ void hapusTask()
                 bantu->next->prev = bantu->prev;
             }
 
-            free(bantu);
+            delete bantu; // Hapus node dari memori
             found = true;
+            cout << "\nTugas \"" << keyword << "\" berhasil dihapus!\n\n";
+            break;
         }
         bantu = bantu->next;
     }
@@ -297,8 +307,22 @@ void simpanDataTugas()
     fclose(file);
 }
 
+void bersihkanList()
+{
+    tugas *bantu = head;
+    while (bantu != nullptr)
+    {
+        tugas *temp = bantu;
+        bantu = bantu->next;
+        free(temp);
+    }
+    head = tail = nullptr;
+}
+
 void ngambilDataTugas()
 {
+    // buat bersihin list tugas sebelum ngambil data dari file, biar gak numpuk data yang sama
+    bersihkanList();
     // buat ngambil data tugas dari file
     FILE *file = fopen("data_tugas.txt", "r");
     if (file == nullptr)
@@ -360,14 +384,13 @@ void ngambilDataTugas()
 
 void lihatTugas()
 {
-
-    tugas *bantu = new tugas;
-    bantu = head;
     cout << "========================================\n";
     cout << "|              TUGAS SAYA              |\n";
     cout << "========================================\n";
 
     ngambilDataTugas();
+    tugas *bantu = new tugas;
+    bantu = head;
 
     while (bantu != nullptr)
     {
@@ -419,10 +442,23 @@ void lihatTugasSelesai()
         cout << "Deadline   : " << tanggal << "/" << bulan << "/" << tahun
              << " " << jam << ":" << menit << endl;
         cout << "----------------------------------------\n";
-        cout << endl;
     }
 
-    fclose(file);
+    int a;
+    cout << "Masukan 0 untuk menghapus semua tugas selesai" << endl;
+    cout << "Masukan 1 untuk kembali ke menu utama" << endl;
+    cout << "Pilihan: ";
+    cin >> a;
+    if (a == 0)
+    {
+        FILE *file = fopen("data_tugas_done.txt", "w");
+        if (file == nullptr)
+        {
+            cout << "File gagal dibuka!\n";
+            return;
+        }
+        fclose(file);
+    }
 }
 
 void nambahTugasBaru()
