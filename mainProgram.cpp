@@ -408,6 +408,11 @@ void lihatTugas()
 void lihatTugasSelesai()
 {
 
+    cout << endl;
+    cout << "========================================\n";
+    cout << "|            TUGAS SELESAI             |\n";
+    cout << "========================================\n";
+
     FILE *file = fopen("data_tugas_done.txt", "r");
     if (file == nullptr)
     {
@@ -415,11 +420,6 @@ void lihatTugasSelesai()
         cout << endl;
         return;
     }
-
-    cout << endl;
-    cout << "========================================\n";
-    cout << "|            TUGAS SELESAI             |\n";
-    cout << "========================================\n";
 
     char namaTugas[100];
     char deskripsi[200];
@@ -444,21 +444,24 @@ void lihatTugasSelesai()
         cout << "----------------------------------------\n";
     }
 
-    int a;
-    cout << "Masukan 0 untuk menghapus semua tugas selesai" << endl;
-    cout << "Masukan 1 untuk kembali ke menu utama" << endl;
-    cout << "Pilihan: ";
-    cin >> a;
-    if (a == 0)
+    if (file != nullptr)
     {
-        FILE *file = fopen("data_tugas_done.txt", "w");
-        if (file == nullptr)
+        int a;
+        cout << "Masukan 0 untuk menghapus semua tugas selesai" << endl;
+        cout << "Masukan 1 untuk kembali ke menu utama" << endl;
+        cout << "Pilihan: ";
+        cin >> a;
+        if (a == 0)
         {
-            cout << "File gagal dibuka!\n";
-            return;
+            FILE *file = fopen("data_tugas_done.txt", "w");
+            if (file == nullptr)
+            {
+                cout << "File gagal dibuka!\n";
+                return;
+            }
         }
-        fclose(file);
     }
+    fclose(file);
 }
 
 void nambahTugasBaru()
