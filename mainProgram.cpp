@@ -37,10 +37,11 @@ void nambahTugasBaru();
 void sortingTugasDL();
 void sortingTugasJudul();
 void searchTask();
+void hapusTask();
 
 int main()
 {
-    lihatTugas();
+
     cout << endl;
 
     char pilih;
@@ -57,10 +58,11 @@ int main()
             nambahTugasBaru();
             break;
         case 'B':
-            // deleteTask();
+            hapusTask();
             break;
         case 'C':
-            // updateStatusTask();
+            simpanDataTugas();
+            lihatTugas();
             break;
         case 'D':
             searchTask();
@@ -103,12 +105,13 @@ int main()
 
 void tampilMenu()
 {
+    lihatTugas();
     cout << "========================================\n";
     cout << "|              MENU UTAMA              |\n";
     cout << "========================================\n";
     cout << "    [A] Tambah Tugas Baru\n";
     cout << "    [B] Hapus Tugas\n";
-    cout << "    [C] Update Status Tugas\n";
+    cout << "    [C] Refresh Tugas\n";
     cout << "    [D] Cari Tugas\n";
     cout << "    [E] Sorting Tugas\n";
     cout << "    [F] Lihat Tugas Done\n";
@@ -191,10 +194,10 @@ void tandaiTugasSelesai()
     if (!found)
     {
         cout << endl;
-        cout << "Tugas \"" << namaTugas << "\" tidak ditemukan." << endl << endl;
+        cout << "Tugas \"" << namaTugas << "\" tidak ditemukan." << endl
+             << endl;
     }
 }
-
 
 void aturStatusTerkini(tugas *node)
 {
@@ -207,7 +210,7 @@ void aturStatusTerkini(tugas *node)
     deadline.tm_mday = node->tanggal;
     deadline.tm_hour = node->jam;
     deadline.tm_min = node->menit;
-    //deadline.tm_sec = 0;
+    // deadline.tm_sec = 0;
 
     time_t waktuDeadline = mktime(&deadline);
 
@@ -218,6 +221,56 @@ void aturStatusTerkini(tugas *node)
     else
     {
         strcpy(node->status, "In Progress");
+    }
+}
+
+void hapusTask()
+{
+    char keyword[100];
+    cout << "[PASTIKAN PENULISAN NAMA TUGAS SAMA DENGAN PENULISAN PADA SAAT INPUT]\n";
+    cout << "Masukkan nama tugas yang ingin dihapus: ";
+    cin.ignore();
+    cin.getline(keyword, 100);
+
+    tugas *bantu = head;
+    bool found = false;
+
+    while (bantu != nullptr)
+    {
+        if (strstr(bantu->namaTugas, keyword) != nullptr)
+        {
+            // Hapus node yang ditemukan
+            if (bantu == head)
+            {
+                head = bantu->next;
+                if (head != nullptr)
+                {
+                    head->prev = nullptr;
+                }
+            }
+            else if (bantu == tail)
+            {
+                tail = bantu->prev;
+                if (tail != nullptr)
+                {
+                    tail->next = nullptr;
+                }
+            }
+            else
+            {
+                bantu->prev->next = bantu->next;
+                bantu->next->prev = bantu->prev;
+            }
+
+            free(bantu);
+            found = true;
+        }
+        bantu = bantu->next;
+    }
+
+    if (!found)
+    {
+        cout << "Tugas \"" << keyword << "\" tidak ditemukan.\n";
     }
 }
 
@@ -251,6 +304,7 @@ void ngambilDataTugas()
     if (file == nullptr)
     {
         cout << "Tugas masih kosong" << endl;
+        cout << "----------------------------------------\n";
         cout << endl;
         return;
     }
@@ -307,13 +361,13 @@ void ngambilDataTugas()
 void lihatTugas()
 {
 
-    ngambilDataTugas();
-
     tugas *bantu = new tugas;
     bantu = head;
     cout << "========================================\n";
     cout << "|              TUGAS SAYA              |\n";
     cout << "========================================\n";
+
+    ngambilDataTugas();
 
     while (bantu != nullptr)
     {
@@ -399,7 +453,7 @@ void nambahTugasBaru()
     cin >> baru->menit;
 
     aturStatusTerkini(baru);
-    
+
     baru->next = nullptr;
     baru->prev = nullptr;
 
