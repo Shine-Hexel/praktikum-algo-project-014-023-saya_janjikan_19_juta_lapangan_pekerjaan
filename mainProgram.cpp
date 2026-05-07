@@ -25,6 +25,7 @@ tugas *head = nullptr;
 tugas *tail = nullptr;
 
 void tampilMenu();
+void tandaiTugasSelesai();
 void pindahTugasSelesai(tugas *node);
 void lihatTugasSelesai();
 void aturStatusTerkini(tugas *node);
@@ -307,7 +308,6 @@ void lihatTugas()
 {
 
     ngambilDataTugas();
-    int angka = 0;
 
     tugas *bantu = new tugas;
     bantu = head;
