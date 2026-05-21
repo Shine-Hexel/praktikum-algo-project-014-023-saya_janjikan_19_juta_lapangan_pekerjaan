@@ -142,27 +142,18 @@ void pindahTugasSelesai(tugas *node)
             node->jam,
             node->menit);
 
-    // jika tugas yang selesai adalah tugas paling atas
     if (node == head)
     {
         head = node->next;
         if (head != nullptr)
-        {
             head->prev = nullptr;
-        }
     }
-
-    // jika tugas yang selesai adalah tugas paling bawah
     else if (node == tail)
     {
         tail = node->prev;
         if (tail != nullptr)
-        {
             tail->next = nullptr;
-        }
     }
-
-    // jika tugas yang selesai berada di tengah list
     else
     {
         node->prev->next = node->next;
@@ -171,9 +162,10 @@ void pindahTugasSelesai(tugas *node)
         node->prev = nullptr;
     }
 
-    // node bantu dihapus karena sudah tidak perlu lagi
     delete node;
     fclose(file);
+
+    simpanDataTugas(); // ← tambahkan ini
 }
 
 void tandaiTugasSelesai()
