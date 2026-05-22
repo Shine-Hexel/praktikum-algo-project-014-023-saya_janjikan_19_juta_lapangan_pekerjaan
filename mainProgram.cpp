@@ -63,7 +63,7 @@ int main()
             break;
         case 'C':
             simpanDataTugas();
-            lihatTugas();
+            cout << "Status berhasil direfresh" << endl;
             break;
         case 'D':
             searchTask();
@@ -73,6 +73,10 @@ int main()
             cout << "\nPilih metode sorting:\n";
             cout << "1. Sorting by Deadline (DL)\n";
             cout << "2. Sorting by Nama Tugas (A-Z)\n";
+
+        pilihsortt:
+        {
+
             cout << "Pilihan: ";
             cin >> pilihSort;
             if (pilihSort == '1')
@@ -86,8 +90,12 @@ int main()
                 cout << "\nTugas berhasil disorting berdasarkan judul tugas!\n\n";
             }
             else
+            {
                 cout << "\nPilihan sorting tidak valid!\nSilahkan pilih antara opsi 1 atau 2.\n\n";
-            break;
+                goto pilihsortt;
+            }
+        }
+        break;
         case 'F':
             lihatTugasSelesai();
             break;
@@ -101,6 +109,32 @@ int main()
         default:
             cout << "\nPilihan tidak valid!\nSilahkan pilih antara opsi A-G.\n";
         }
+
+    lanjuut:
+    {
+
+        string lanjut_gak_nich;
+        cout << "Kembali ke menu? (y/t): ";
+        cin >> lanjut_gak_nich;
+
+        if (lanjut_gak_nich == "n" || lanjut_gak_nich == "N")
+        {
+            cout << "\n  Selamat fokus menyelesaikan tugas! Data tersimpan secara otomatis >_< \n\n";
+            running = false;
+            break;
+        }
+
+        else if (lanjut_gak_nich == "y" || lanjut_gak_nich == "")
+        {
+            system("cls");
+        }
+
+        else
+        {
+            cout << "Input tidak valid" << endl;
+            goto lanjuut;
+        }
+    }
     }
 }
 
@@ -227,8 +261,10 @@ void aturStatusTerkini(tugas *node)
 void hapusTask()
 {
     char keyword[100];
+
     cout << "[PASTIKAN PENULISAN NAMA TUGAS SAMA DENGAN PENULISAN PADA SAAT INPUT]\n";
     cout << "Masukkan nama tugas yang ingin dihapus: ";
+
     cin.ignore();
     cin.getline(keyword, 100);
 
@@ -237,42 +273,60 @@ void hapusTask()
 
     while (bantu != nullptr)
     {
-        if (strstr(bantu->namaTugas, keyword) != nullptr)
+        if (strcmp(bantu->namaTugas, keyword) == 0)
         {
-            // Hapus node yang ditemukan
+            // jika node yang dihapus adalah head
             if (bantu == head)
             {
                 head = bantu->next;
+
                 if (head != nullptr)
                 {
                     head->prev = nullptr;
                 }
+                else
+                {
+                    // jika list menjadi kosong
+                    tail = nullptr;
+                }
             }
+
+            // jika node yang dihapus adalah tail
             else if (bantu == tail)
             {
                 tail = bantu->prev;
+
                 if (tail != nullptr)
                 {
                     tail->next = nullptr;
                 }
             }
+
+            // jika node berada di tengah
             else
             {
                 bantu->prev->next = bantu->next;
                 bantu->next->prev = bantu->prev;
             }
 
-            delete bantu; // Hapus node dari memori
+            delete bantu;
+
+            // simpan ulang file
+            simpanDataTugas();
+
             found = true;
+
             cout << "\nTugas \"" << keyword << "\" berhasil dihapus!\n\n";
+
             break;
         }
+
         bantu = bantu->next;
     }
 
     if (!found)
     {
-        cout << "Tugas \"" << keyword << "\" tidak ditemukan.\n";
+        cout << "\nTugas \"" << keyword << "\" tidak ditemukan.\n\n";
     }
 }
 
@@ -400,11 +454,6 @@ void lihatTugas()
 void lihatTugasSelesai()
 {
 
-    cout << endl;
-    cout << "========================================\n";
-    cout << "|            TUGAS SELESAI             |\n";
-    cout << "========================================\n";
-
     FILE *file = fopen("data_tugas_done.txt", "r");
     if (file == nullptr)
     {
@@ -412,6 +461,11 @@ void lihatTugasSelesai()
         cout << endl;
         return;
     }
+
+    cout << endl;
+    cout << "========================================\n";
+    cout << "|            TUGAS SELESAI             |\n";
+    cout << "========================================\n";
 
     char namaTugas[100];
     char deskripsi[200];
