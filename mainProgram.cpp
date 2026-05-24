@@ -107,7 +107,7 @@ int main()
             running = false;
             break;
         default:
-            cout << "\nPilihan tidak valid!\nSilahkan pilih antara opsi A-G.\n";
+            cout << "\nPilihan tidak valid!\nSilahkan kembali ke menu lalu pilih antara opsi A-G.\n";
         }
 
     lanjuut:
@@ -117,7 +117,7 @@ int main()
         cout << "Kembali ke menu? (y/t): ";
         cin >> lanjut_gak_nich;
 
-        if (lanjut_gak_nich == "n" || lanjut_gak_nich == "N")
+        if (lanjut_gak_nich == "t" || lanjut_gak_nich == "T")
         {
             cout << "\n  Selamat fokus menyelesaikan tugas! Data tersimpan secara otomatis >_< \n\n";
             running = false;
@@ -462,6 +462,15 @@ void lihatTugasSelesai()
         return;
     }
 
+    char cekFile = fgetc(file);
+
+    if (cekFile == EOF)
+    {
+        cout << "Tugas masih kosong" << endl;
+        fclose(file);
+        return;
+    }
+
     cout << endl;
     cout << "========================================\n";
     cout << "|            TUGAS SELESAI             |\n";
@@ -490,23 +499,6 @@ void lihatTugasSelesai()
         cout << "----------------------------------------\n";
     }
 
-    if (file != nullptr)
-    {
-        int a;
-        cout << "Masukan 0 untuk menghapus semua tugas selesai" << endl;
-        cout << "Masukan 1 untuk kembali ke menu utama" << endl;
-        cout << "Pilihan: ";
-        cin >> a;
-        if (a == 0)
-        {
-            FILE *file = fopen("data_tugas_done.txt", "w");
-            if (file == nullptr)
-            {
-                cout << "File gagal dibuka!\n";
-                return;
-            }
-        }
-    }
     fclose(file);
 }
 
