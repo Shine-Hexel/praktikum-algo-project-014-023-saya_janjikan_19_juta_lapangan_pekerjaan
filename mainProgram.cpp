@@ -462,15 +462,6 @@ void lihatTugasSelesai()
         return;
     }
 
-    char cekFile = fgetc(file);
-
-    if (cekFile == EOF)
-    {
-        cout << "Tugas masih kosong" << endl;
-        fclose(file);
-        return;
-    }
-
     cout << endl;
     cout << "========================================\n";
     cout << "|            TUGAS SELESAI             |\n";
