@@ -1,2 +1,3 @@
-Laprak web;Menyelesaikan laporan praktikum web;In Progress;21;5;2026;12;10
-Laprak Algo;menyelesaikan laporan praktikum Algo;In Progress;25;5;2026;17;30
+Laprak Algo;menyelesaikan laporan praktikum Algo;Late;25;5;2026;17;30
+Laprak web;Menyelesaikan laporan praktikum web;Late;21;5;2026;12;10
+Grooming kucing;Membawa kucing ke petshop untuk grooming;In Progress;30;5;2026;10;15

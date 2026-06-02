@@ -32,7 +32,6 @@ void aturStatusTerkini(tugas *node);
 void simpanDataTugas();
 void ngambilDataTugas();
 void lihatTugas();
-void lihatTugasSelesai();
 void nambahTugasBaru();
 void sortingTugasDL();
 void sortingTugasJudul();
@@ -430,23 +429,25 @@ void ngambilDataTugas()
 
 void lihatTugas()
 {
-    cout << "========================================\n";
-    cout << "|              TUGAS SAYA              |\n";
-    cout << "========================================\n";
+    cout << "+========================================+\n";
+    cout << "|              TUGAS SAYA               |\n";
+    cout << "+========================================+\n";
 
     ngambilDataTugas();
     tugas *bantu = new tugas;
     bantu = head;
 
-    while (bantu != nullptr)
-    {
-        cout << "Nama Tugas : " << bantu->namaTugas << endl;
-        cout << "Deskripsi  : " << bantu->deskripsi << endl;
-        cout << "Status     : " << bantu->status << endl;
-        cout << "Deadline   : " << bantu->tanggal << "/" << bantu->bulan << "/" << bantu->tahun
-             << " " << bantu->jam << ":" << bantu->menit << endl;
-        cout << "----------------------------------------\n";
-        cout << endl;
+	while (bantu != nullptr) {
+        cout << "| " << left << setw(12) << "Nama Tugas" << ": " << bantu->namaTugas << "\n";
+        cout << "| " << left << setw(12) << "Deskripsi"  << ": " << bantu->deskripsi << "\n";
+        cout << "| " << left << setw(12) << "Status"     << ": " << bantu->status << "\n";
+        cout << "| " << left << setw(12) << "Deadline"   << ": "
+             << setfill('0') << setw(2) << bantu->tanggal << "/"
+             << setw(2) << bantu->bulan << "/"
+             << setfill(' ') << bantu->tahun
+             << "  " << setfill('0') << setw(2) << bantu->jam << ":"
+             << setw(2) << bantu->menit << setfill(' ') << "\n";
+        cout << "+----------------------------------------+\n";
         bantu = bantu->next;
     }
 }
@@ -473,22 +474,25 @@ void lihatTugasSelesai()
     int tanggal, bulan, tahun, jam, menit;
 
     while (fscanf(file, "%[^;];%[^;];%[^;];%d;%d;%d;%d;%d\n",
-                  namaTugas,
-                  deskripsi,
-                  status,
-                  &tanggal,
-                  &bulan,
-                  &tahun,
-                  &jam,
-                  &menit) != EOF)
-    {
-        cout << "Nama Tugas : " << namaTugas << endl;
-        cout << "Deskripsi  : " << deskripsi << endl;
-        cout << "Status     : " << status << endl;
-        cout << "Deadline   : " << tanggal << "/" << bulan << "/" << tahun
-             << " " << jam << ":" << menit << endl;
-        cout << "----------------------------------------\n";
-    }
+              namaTugas,
+              deskripsi,
+              status,
+              &tanggal,
+              &bulan,
+              &tahun, 
+              &jam, 
+              &menit) != EOF) {
+    cout << "| " << left << setw(12) << "Nama Tugas" << ": " << namaTugas << "\n";
+    cout << "| " << left << setw(12) << "Deskripsi"  << ": " << deskripsi << "\n";
+    cout << "| " << left << setw(12) << "Status"     << ": " << status << "\n";
+    cout << "| " << left << setw(12) << "Deadline"   << ": "
+         << setfill('0') << setw(2) << tanggal << "/"
+         << setw(2) << bulan << "/"
+         << setfill(' ') << tahun
+         << "  " << setfill('0') << setw(2) << jam << ":"
+         << setw(2) << menit << setfill(' ') << "\n";
+    cout << "+----------------------------------------+\n";
+	}
 
     fclose(file);
 }
