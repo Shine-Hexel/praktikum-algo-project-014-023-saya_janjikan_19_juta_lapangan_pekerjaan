@@ -104,8 +104,7 @@ int main()
             break;
         case 'G':
             cout << "\n  Selamat fokus menyelesaikan tugas! Data tersimpan secara otomatis >_< \n\n";
-            running = false;
-            break;
+            return 0;
         default:
             cout << "\nPilihan tidak valid!\nSilahkan kembali ke menu lalu pilih antara opsi A-G.\n";
         }
@@ -537,6 +536,7 @@ void nambahTugasBaru()
     }
 
     simpanDataTugas();
+    cout << "Tugas baru berhasil ditambahkan!\n\n";
 }
 
 void sortingTugasDL()
