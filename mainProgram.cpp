@@ -195,10 +195,10 @@ void pindahTugasSelesai(tugas *node)
         node->prev = nullptr;
     }
 
-    delete node;
+    delete node; 
     fclose(file);
 
-    simpanDataTugas(); // ← tambahkan ini
+    simpanDataTugas(); // update file data_tugas.txt setelah memindahkan tugas ke data_tugas_done.txt
 }
 
 void tandaiTugasSelesai()
@@ -216,7 +216,7 @@ void tandaiTugasSelesai()
         if (strcmp(bantu->namaTugas, namaTugas) == 0)
         {
             strcpy(bantu->status, "Done");
-            pindahTugasSelesai(bantu);
+            pindahTugasSelesai(bantu); // pindahkan tugas yang sudah selesai ke file data_tugas_done.txt dan hapus dari list tugas
             cout << "\nTugas \"" << namaTugas << "\" berhasil ditandai selesai!\n\n";
             found = true;
             break;
@@ -232,20 +232,20 @@ void tandaiTugasSelesai()
     }
 }
 
-void aturStatusTerkini(tugas *node)
+void aturStatusTerkini(tugas *node) //nanti dipake buat refresh status tugas juga
 {
-    time_t saat_ini = time(0);
+    time_t saat_ini = time(0); // ambil waktu saat ini dalam format time_t
 
-    tm deadline = {};
+    tm deadline = {}; // inisialisasi struct tm untuk deadline tugas
 
     deadline.tm_year = node->tahun - 1900; // tm_year dihitung sejak 1900
     deadline.tm_mon = node->bulan - 1;     // tm_mon dihitung dari 0 (Januari)
-    deadline.tm_mday = node->tanggal;
+    deadline.tm_mday = node->tanggal; 
     deadline.tm_hour = node->jam;
     deadline.tm_min = node->menit;
     // deadline.tm_sec = 0;
 
-    time_t waktuDeadline = mktime(&deadline);
+    time_t waktuDeadline = mktime(&deadline); // konversi struct tm ke time_t untuk perbandingan
 
     if (waktuDeadline < saat_ini)
     {
@@ -272,7 +272,7 @@ void hapusTask()
 
     while (bantu != nullptr)
     {
-        if (strcmp(bantu->namaTugas, keyword) == 0)
+        if (strcmp(bantu->namaTugas, keyword) == 0) // jika nama tugas sesuai dengan keyword yang dicari
         {
             // jika node yang dihapus adalah head
             if (bantu == head)
@@ -352,7 +352,8 @@ void simpanDataTugas()
     fclose(file);
 }
 
-void bersihkanList()
+void bersihkanList() 
+// buat bersihin list tugas sebelum ngambil data dari file, biar gak numpuk data yang sama
 {
     tugas *bantu = head;
     while (bantu != nullptr)
@@ -366,9 +367,9 @@ void bersihkanList()
 
 void ngambilDataTugas()
 {
-    // buat bersihin list tugas sebelum ngambil data dari file, biar gak numpuk data yang sama
+    //bersihin dulu list tugasnya 
     bersihkanList();
-    // buat ngambil data tugas dari file
+    //ngambil data tugas dari file
     FILE *file = fopen("data_tugas.txt", "r");
     if (file == nullptr)
     {
@@ -405,7 +406,7 @@ void ngambilDataTugas()
         baru->next = nullptr;
         baru->prev = nullptr;
 
-        // status tugas diupdate sesuai dengan waktu sekarang
+        // status tugas diupdate biar tetep sinkron dan sesuai dengan waktu sekarang
         // kalo udah lewat deadline, statusnya jadi "Late", kalo belum lewat, statusnya "In Progress"
         aturStatusTerkini(baru);
 
@@ -452,7 +453,7 @@ void lihatTugas()
 
 void lihatTugasSelesai()
 {
-
+    // buat nampilin tugas yang udah selesai dari file data_tugas_done.txt
     FILE *file = fopen("data_tugas_done.txt", "r");
     if (file == nullptr)
     {
@@ -519,6 +520,8 @@ void nambahTugasBaru()
     cout << "Masukkan menit deadline (0-59): ";
     cin >> baru->menit;
 
+    //status tugas diupdate sesuai dengan waktu sekarang
+    //kalo udah lewat deadline, statusnya jadi "Late", kalo belum lewat maka "in progress"
     aturStatusTerkini(baru);
 
     baru->next = nullptr;
@@ -548,6 +551,8 @@ void sortingTugasDL()
 
     while (bantu != nullptr)
     {
+        //bikin pointer min untuk nyimpen tugas dengan deadline paling awal, 
+        //mulai dari tugas yang sedang diperiksa (bantu) sampai akhir list
         tugas *min = bantu;
         tugas *selanjutnya = bantu->next;
 
@@ -602,7 +607,7 @@ void sortingTugasDL()
         bantu = bantu->next;
     }
 
-    simpanDataTugas();
+    simpanDataTugas(); // update file data_tugas.txt setelah sorting berdasarkan deadline
 }
 
 // sorting by judul tugas secara alfabetis menggunakan bubble sort
@@ -662,7 +667,7 @@ void sortingTugasJudul()
         akhir = bantu; // make sure elemen terakhir sudah pada tempatnya
     } while (swapped);
 
-    simpanDataTugas();
+    simpanDataTugas(); // update file data_tugas.txt setelah sorting berdasarkan judul tugas
 }
 
 void searchTask()
