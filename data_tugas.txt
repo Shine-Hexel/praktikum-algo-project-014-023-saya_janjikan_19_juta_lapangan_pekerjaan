@@ -1,5 +1,5 @@
-Laprak web;Menyelesaikan laporan praktikum web;Late;21;5;2026;12;10
-Laprak Algo;menyelesaikan laporan praktikum Algo;Late;25;5;2026;17;30
-Belajar;Belajar aja sih intinya;In Progress;10;6;2026;4;55
-Donate Reza Auditore;biar abi eja bisa ganti keyboard pemda;In Progress;8;6;2026;12;0
-Rapat Dep;Rapat advo d cosan;In Progress;6;6;2026;13;30
+Laprak web;Menyelesaikan laporan praktikum web;Late;21;10;2026;12;10
+Laprak Algo;menyelesaikan laporan praktikum Algo;Late;25;10;2026;17;30
+Belajar;Belajar aja sih intinya;In Progress;10;12;2026;4;55
+Donate Reza Auditore;biar abi eja bisa ganti keyboard pemda;In Progress;18;10;2026;12;0
+Rapat Dep;Rapat advo d cosan;In Progress;16;12;2026;13;30
