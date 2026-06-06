@@ -589,6 +589,7 @@ void nambahTugasBaru()
     cout << "Tugas baru berhasil ditambahkan!\n\n";
 }
 
+// sorting by deadline menggunakan selection sort
 void sortingTugasDL()
 {
 
@@ -745,7 +746,7 @@ void searchTask()
             cout << "----------------------------------------\n";
             found = true;
         }
-        bantu = bantu->next;
+        bantu = bantu->next; 
     }
 
     if (!found)
