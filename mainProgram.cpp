@@ -62,6 +62,11 @@ int main()
             hapusTask();
             break;
         case 'C':
+            if (head == nullptr)
+            {
+                cout << "Belum ada tugas untuk direfresh." << endl;
+                break;
+            }
             simpanDataTugas();
             cout << "Status berhasil direfresh" << endl;
             break;
@@ -69,6 +74,11 @@ int main()
             searchTask();
             break;
         case 'E':
+            if (head == nullptr)
+            {
+                cout << "Belum ada tugas untuk disorting." << endl;
+                break;
+            }
             char pilihSort;
             cout << "\nPilih metode sorting:\n";
             cout << "1. Sorting by Deadline (DL)\n";
@@ -175,19 +185,19 @@ void pindahTugasSelesai(tugas *node)
             node->jam,
             node->menit);
 
-    if (node == head)
+    if (node == head) // jika node yang dipindahkan adalah head, head diupdate ke node berikutnya
     {
         head = node->next;
-        if (head != nullptr)
+        if (head != nullptr) // jika list tidak menjadi kosong setelah head diupdate, prev head yang baru diupdate jadi nullptr
             head->prev = nullptr;
     }
-    else if (node == tail)
+    else if (node == tail) // jika node yang dipindahkan adalah tail, tail diupdate ke node sebelumnya
     {
         tail = node->prev;
-        if (tail != nullptr)
+        if (tail != nullptr) // jika list tidak menjadi kosong setelah tail diupdate, next tail yang baru diupdate jadi nullptr
             tail->next = nullptr;
     }
-    else
+    else // jika node berada di tengah, next node sebelumnya diupdate ke node berikutnya, dan prev node berikutnya diupdate ke node sebelumnya
     {
         node->prev->next = node->next;
         node->next->prev = node->prev;
@@ -195,7 +205,7 @@ void pindahTugasSelesai(tugas *node)
         node->prev = nullptr;
     }
 
-    delete node; 
+    delete node;
     fclose(file);
 
     simpanDataTugas(); // update file data_tugas.txt setelah memindahkan tugas ke data_tugas_done.txt
@@ -203,6 +213,11 @@ void pindahTugasSelesai(tugas *node)
 
 void tandaiTugasSelesai()
 {
+    if (head == nullptr)
+    {
+        cout << "Belum ada tugas.\n";
+        return;
+    }
     char namaTugas[100];
     cout << "Masukkan nama tugas yang ingin ditandai selesai: ";
     cin.ignore();
@@ -224,7 +239,7 @@ void tandaiTugasSelesai()
         bantu = bantu->next;
     }
 
-    if (!found)
+    if (!found) // jika tugas dengan nama yang dimasukkan tidak ditemukan dalam list tugas
     {
         cout << endl;
         cout << "Tugas \"" << namaTugas << "\" tidak ditemukan." << endl
@@ -232,7 +247,7 @@ void tandaiTugasSelesai()
     }
 }
 
-void aturStatusTerkini(tugas *node) //nanti dipake buat refresh status tugas juga
+void aturStatusTerkini(tugas *node) // nanti dipake buat refresh status tugas juga
 {
     time_t saat_ini = time(0); // ambil waktu saat ini dalam format time_t
 
@@ -240,7 +255,7 @@ void aturStatusTerkini(tugas *node) //nanti dipake buat refresh status tugas jug
 
     deadline.tm_year = node->tahun - 1900; // tm_year dihitung sejak 1900
     deadline.tm_mon = node->bulan - 1;     // tm_mon dihitung dari 0 (Januari)
-    deadline.tm_mday = node->tanggal; 
+    deadline.tm_mday = node->tanggal;
     deadline.tm_hour = node->jam;
     deadline.tm_min = node->menit;
     // deadline.tm_sec = 0;
@@ -259,6 +274,13 @@ void aturStatusTerkini(tugas *node) //nanti dipake buat refresh status tugas jug
 
 void hapusTask()
 {
+
+    if (head == nullptr)
+    {
+        cout << "Tidak ada tugas untuk dihapus.\n";
+        return;
+    }
+
     char keyword[100];
 
     cout << "[PASTIKAN PENULISAN NAMA TUGAS SAMA DENGAN PENULISAN PADA SAAT INPUT]\n";
@@ -335,6 +357,12 @@ void simpanDataTugas()
     FILE *file = fopen("data_tugas.txt", "w");
     tugas *bantu = head;
 
+    if (file == nullptr)
+    {
+        cout << "Gagal membuka file data_tugas.txt!" << endl;
+        return;
+    }
+
     while (bantu != nullptr)
     {
         fprintf(file, "%s;%s;%s;%d;%d;%d;%d;%d\n",
@@ -352,7 +380,7 @@ void simpanDataTugas()
     fclose(file);
 }
 
-void bersihkanList() 
+void bersihkanList()
 // buat bersihin list tugas sebelum ngambil data dari file, biar gak numpuk data yang sama
 {
     tugas *bantu = head;
@@ -360,21 +388,28 @@ void bersihkanList()
     {
         tugas *temp = bantu;
         bantu = bantu->next;
-        free(temp);
+        delete temp;
     }
     head = tail = nullptr;
 }
 
 void ngambilDataTugas()
 {
-    //bersihin dulu list tugasnya 
+    // bersihin dulu list tugasnya
     bersihkanList();
-    //ngambil data tugas dari file
+    // ngambil data tugas dari file
     FILE *file = fopen("data_tugas.txt", "r");
     if (file == nullptr)
     {
         cout << "Tugas masih kosong" << endl;
-        cout << "----------------------------------------\n";
+        cout << "----------------------------------------" << endl;
+        cout << endl;
+        return;
+    }
+    else if (head == nullptr)
+    {
+        cout << "Belum ada tugas yang tersimpan" << endl;
+        cout << "----------------------------------------" << endl;
         cout << endl;
         return;
     }
@@ -435,8 +470,7 @@ void lihatTugas()
     cout << "========================================\n";
 
     ngambilDataTugas();
-    tugas *bantu = new tugas;
-    bantu = head;
+    tugas *bantu = head;
 
     while (bantu != nullptr)
     {
@@ -449,6 +483,7 @@ void lihatTugas()
         cout << endl;
         bantu = bantu->next;
     }
+    delete bantu;
 }
 
 void lihatTugasSelesai()
@@ -505,33 +540,45 @@ void nambahTugasBaru()
     cout << "Masukkan deskripsi tugas: ";
     cin.getline(baru->deskripsi, 200);
 
-    cout << "Masukkan tanggal deadline (1-31): ";
-    cin >> baru->tanggal;
+    do
+    {
+        cout << "Masukkan tanggal deadline (1-31): ";
+        cin >> baru->tanggal;
+    } while (baru->tanggal < 1 || baru->tanggal > 31); // validasi input tanggal antara 1-31
 
-    cout << "Masukkan bulan deadline (1-12): ";
-    cin >> baru->bulan;
+    do
+    {
+        cout << "Masukkan bulan deadline (1-12): ";
+        cin >> baru->bulan;
+    } while (baru->bulan < 1 || baru->bulan > 12); // validasi input bulan antara 1-12
 
     cout << "Masukkan tahun deadline: ";
     cin >> baru->tahun;
 
-    cout << "Masukkan jam deadline (0-23): ";
-    cin >> baru->jam;
+    do
+    {
+        cout << "Masukkan jam deadline (0-23): "; // validasi input jam antara 0-23
+        cin >> baru->jam;
+    } while (baru->jam < 0 || baru->jam > 23);
 
-    cout << "Masukkan menit deadline (0-59): ";
-    cin >> baru->menit;
+    do
+    {
+        cout << "Masukkan menit deadline (0-59): "; // validasi input menit antara 0-59
+        cin >> baru->menit;
+    } while (baru->menit < 0 || baru->menit > 59);
 
-    //status tugas diupdate sesuai dengan waktu sekarang
-    //kalo udah lewat deadline, statusnya jadi "Late", kalo belum lewat maka "in progress"
+    // status tugas diupdate sesuai dengan waktu sekarang
+    // kalo udah lewat deadline, statusnya jadi "Late", kalo belum lewat maka "in progress"
     aturStatusTerkini(baru);
 
     baru->next = nullptr;
     baru->prev = nullptr;
 
-    if (head == nullptr)
+    if (head == nullptr) // jika list masih kosong, node baru jadi head dan tail
     {
         head = tail = baru;
     }
-    else
+    else // kalo list udah ada isinya, node baru ditambahin di akhir list
     {
         tail->next = baru;
         baru->prev = tail;
@@ -544,15 +591,13 @@ void nambahTugasBaru()
 
 void sortingTugasDL()
 {
-    if (head == nullptr || head->next == nullptr)
-        return; // jumlah list hanya 1 atau kosong
 
     tugas *bantu = head;
 
     while (bantu != nullptr)
     {
-        //bikin pointer min untuk nyimpen tugas dengan deadline paling awal, 
-        //mulai dari tugas yang sedang diperiksa (bantu) sampai akhir list
+        // bikin pointer min untuk nyimpen tugas dengan deadline paling awal,
+        // mulai dari tugas yang sedang diperiksa (bantu) sampai akhir list
         tugas *min = bantu;
         tugas *selanjutnya = bantu->next;
 
@@ -613,8 +658,6 @@ void sortingTugasDL()
 // sorting by judul tugas secara alfabetis menggunakan bubble sort
 void sortingTugasJudul()
 {
-    if (head == nullptr || head->next == nullptr)
-        return; // jumlah list hanya 1 atau kosong
 
     bool swapped;
     tugas *bantu;
@@ -672,6 +715,12 @@ void sortingTugasJudul()
 
 void searchTask()
 {
+    if (head == nullptr)
+    {
+        cout << "Belum ada tugas yang tersimpan.\n";
+        return;
+    }
+
     char keyword[100];
     cout << "[PASTIKAN PENULISAN NAMA TUGAS SAMA DENGAN PENULISAN PADA SAAT INPUT]\n";
     cout << "Masukkan nama tugas yang ingin dicari: ";
