@@ -249,8 +249,7 @@ void tandaiTugasSelesai()
 void aturStatusTerkini(tugas *node) // nanti dipake buat refresh status tugas juga
 {
     time_t saat_ini = time(0); // ambil waktu saat ini dalam format time_t
-
-    tm deadline = {}; // inisialisasi struct tm untuk deadline tugas
+    tm deadline = {};          // inisialisasi struct tm untuk deadline tugas
 
     deadline.tm_year = node->tahun - 1900; // tm_year dihitung sejak 1900
     deadline.tm_mon = node->bulan - 1;     // tm_mon dihitung dari 0 (Januari)
@@ -405,13 +404,6 @@ void ngambilDataTugas()
         cout << endl;
         return;
     }
-    else if (head == nullptr)
-    {
-        cout << "Belum ada tugas yang tersimpan" << endl;
-        cout << "----------------------------------------" << endl;
-        cout << endl;
-        return;
-    }
 
     tugas *bantu = new tugas;
 
@@ -459,6 +451,13 @@ void ngambilDataTugas()
         }
     }
 
+    if (head == nullptr)
+    {
+        cout << "Belum ada tugas yang tersimpan" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << endl;
+        return;
+    }
     fclose(file);
 }
 
@@ -484,7 +483,6 @@ void lihatTugas()
         cout << "+----------------------------------------+\n";
         bantu = bantu->next;
     }
-    delete bantu;
 }
 
 void lihatTugasSelesai()
@@ -593,6 +591,7 @@ void nambahTugasBaru()
     cout << "Tugas baru berhasil ditambahkan!\n\n";
 }
 
+// sorting by deadline menggunakan selection sort
 void sortingTugasDL()
 {
 
