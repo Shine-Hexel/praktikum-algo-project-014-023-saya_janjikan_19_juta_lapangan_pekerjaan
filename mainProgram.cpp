@@ -464,7 +464,7 @@ void ngambilDataTugas()
 void lihatTugas()
 {
     cout << "+========================================+\n";
-    cout << "|              TUGAS SAYA               |\n";
+    cout << "|              TUGAS SAYA                |\n";
     cout << "+========================================+\n";
 
     ngambilDataTugas();
